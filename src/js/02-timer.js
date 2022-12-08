@@ -13,6 +13,8 @@ const refs = {
 }
 
 refs.dataStart.disabled = true;
+let timerId = null;
+let diff;
 
 const options = {
   enableTime: true,
@@ -28,18 +30,23 @@ const options = {
             refs.dataStart.addEventListener('click', onStart);
 
             function onStart() {
-            const timerId = setInterval(countTime, 1000);
+            timerId = setInterval(countTime, 1000);
             }
 
             function countTime() {
-            let diff = selectedDates[0] - options.defaultDate;
+            diff = selectedDates[0] - options.defaultDate;
             if (diff < 1000) {
                 clearInterval(timerId);
             }
-            
-            convertMs();
                 
-            
+            convertMs(diff);
+
+            refs.dataDay.textContent = convertMs.days;
+            refs.dataHours.textContent = convertMs.hours;
+            refs.dataMinutes.textContent = convertMs.minutes;
+            refs.dataSeconds.textContent = convertMs.seconds;
+ 
+            addLeadingZero(refs.value);
             }
         }
     },
@@ -47,38 +54,29 @@ const options = {
           
 flatpickr(refs.dataInput, options);
 
-function convertMs(diff) {
-            // Number of milliseconds per unit of time
+function convertMs() {
+    // Number of milliseconds per unit of time
     const second = 1000;
     const minute = second * 60;
     const hour = minute * 60;
     const day = hour * 24;
 
-            // Remaining days
+    // Remaining days
     const days = Math.floor(diff / day);
-            // Remaining hours
+     // Remaining hours
     const hours = Math.floor((diff % day) / hour);
-            // Remaining minutes
+    // Remaining minutes
     const minutes = Math.floor(((diff % day) % hour) / minute);
-            // Remaining seconds
+     // Remaining seconds
     const seconds = Math.floor((((diff % day) % hour) % minute) / second);
-                
-    refs.dataDay.textContent = convertMs.days;
-    refs.dataHours.textContent = convertMs.hours;
-    refs.dataMinutes.textContent = convertMs.minutes;
-    refs.dataSeconds.textContent = convertMs.seconds;
- 
-    addLeadingZero(refs.value);
 
-    function addLeadingZero() {
-        if (refs.value.textContent.length < 2) {
-        refs.value.textContent.toString().padStart(2, '0')
-        } 
-    }
- 
     return { days, hours, minutes, seconds };
 }
 
-
+function addLeadingZero() {
+    if (refs.value.textContent.length < 2) {
+    refs.value.textContent.toString().padStart(2, '0')
+    } 
+}
 
 
