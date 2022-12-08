@@ -14,11 +14,12 @@ const refs = {
 
 refs.dataStart.disabled = true;
 let timerId = null;
-let diff;
+/* let diff = null; */
 const days = 0;
 const hours = 0;
 const minutes = 0;
 const seconds = 0;
+
 
 const options = {
   enableTime: true,
@@ -34,23 +35,23 @@ const options = {
             refs.dataStart.addEventListener('click', onStart);
 
             function onStart() {
-            timerId = setInterval(countTime, 1000);
+                timerId = setInterval(countTime, 1000);
             }
 
             function countTime() {
-            diff = selectedDates[0] - options.defaultDate;
-            if (diff < 1000) {
-                clearInterval(timerId);
-            }
+                let diff = selectedDates[0] - options.defaultDate;
+                if (diff < 1000) {
+                    clearInterval(timerId);
+                }
                 
-            convertMs(diff);
+                const convertDiff = () => convertMs(diff);
                 
-            refs.dataDay.textContent = convertMs.days;
-            refs.dataHours.textContent = convertMs.hours;
-            refs.dataMinutes.textContent = convertMs.minutes;
-            refs.dataSeconds.textContent = convertMs.seconds;
+                refs.dataDay.textContent = convertMs.days;
+                refs.dataHours.textContent = convertMs.hours;
+                refs.dataMinutes.textContent = convertMs.minutes;
+                refs.dataSeconds.textContent = convertMs.seconds;
             
-            addLeadingZero(refs.value);
+                addLeadingZero(refs.value);
             }
         }
     },
@@ -77,13 +78,11 @@ function convertMs() {
     return { days, hours, minutes, seconds };
 }
 
-/* function addLeadingZero() {
+function addLeadingZero() {
     if (refs.value.textContent.length < 2) {
     refs.value.textContent.toString().padStart(2, '0')
     } 
-}
- */
-
-if (Number(refs.value.textContent) < 10) {
+    /* if (Number(refs.value.textContent) < 10) {
     refs.value.textContent.toString().padStart(2, '0')
-    }
+    } */
+}
