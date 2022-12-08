@@ -15,12 +15,6 @@ const refs = {
 refs.dataStart.disabled = true;
 let timerId = null;
 /* let diff = null; */
-const days = 0;
-const hours = 0;
-const minutes = 0;
-const seconds = 0;
-
-
 const options = {
   enableTime: true,
   time_24hr: true,
@@ -50,8 +44,11 @@ const options = {
                 refs.dataHours.textContent = convertMs.hours;
                 refs.dataMinutes.textContent = convertMs.minutes;
                 refs.dataSeconds.textContent = convertMs.seconds;
-            
-                addLeadingZero(refs.value);
+                
+                if (refs.value.textContent.length < 2) {
+                    addLeadingZero(refs.value);
+                }
+                
             }
         }
     },
@@ -59,29 +56,27 @@ const options = {
           
 flatpickr(refs.dataInput, options);
 
-function convertMs() {
-    // Number of milliseconds per unit of time
-    const second = 1000;
-    const minute = second * 60;
-    const hour = minute * 60;
-    const day = hour * 24;
+function convertMs(ms) {
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
 
-    // Remaining days
-    days = Math.floor(diff / day);
-     // Remaining hours
-    hours = Math.floor((diff % day) / hour);
-    // Remaining minutes
-    minutes = Math.floor(((diff % day) % hour) / minute);
-     // Remaining seconds
-    seconds = Math.floor((((diff % day) % hour) % minute) / second);
+  const days = Math.floor(ms / day);
+  const hours = Math.floor((ms % day) / hour);
+  const minutes = Math.floor(((ms % day) % hour) / minute);
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
-    return { days, hours, minutes, seconds };
+  return { days, hours, minutes, seconds };
 }
 
+
 function addLeadingZero() {
-    if (refs.value.textContent.length < 2) {
+    refs.value.textContent = refs.value.textContent.toString().padStart(2, '0');
+    /* if (refs.value.textContent.length < 2) {
     refs.value.textContent.toString().padStart(2, '0')
-    } 
+    }  */
+
     /* if (Number(refs.value.textContent) < 10) {
     refs.value.textContent.toString().padStart(2, '0')
     } */
