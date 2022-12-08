@@ -15,6 +15,10 @@ const refs = {
 refs.dataStart.disabled = true;
 let timerId = null;
 let diff;
+const days = 0;
+const hours = 0;
+const minutes = 0;
+const seconds = 0;
 
 const options = {
   enableTime: true,
@@ -40,12 +44,12 @@ const options = {
             }
                 
             convertMs(diff);
-
+                
             refs.dataDay.textContent = convertMs.days;
             refs.dataHours.textContent = convertMs.hours;
             refs.dataMinutes.textContent = convertMs.minutes;
             refs.dataSeconds.textContent = convertMs.seconds;
- 
+            
             addLeadingZero(refs.value);
             }
         }
@@ -62,21 +66,24 @@ function convertMs() {
     const day = hour * 24;
 
     // Remaining days
-    const days = Math.floor(diff / day);
+    days = Math.floor(diff / day);
      // Remaining hours
-    const hours = Math.floor((diff % day) / hour);
+    hours = Math.floor((diff % day) / hour);
     // Remaining minutes
-    const minutes = Math.floor(((diff % day) % hour) / minute);
+    minutes = Math.floor(((diff % day) % hour) / minute);
      // Remaining seconds
-    const seconds = Math.floor((((diff % day) % hour) % minute) / second);
+    seconds = Math.floor((((diff % day) % hour) % minute) / second);
 
     return { days, hours, minutes, seconds };
 }
 
-function addLeadingZero() {
+/* function addLeadingZero() {
     if (refs.value.textContent.length < 2) {
     refs.value.textContent.toString().padStart(2, '0')
     } 
 }
+ */
 
-
+if (Number(refs.value.textContent) < 10) {
+    refs.value.textContent.toString().padStart(2, '0')
+    }
