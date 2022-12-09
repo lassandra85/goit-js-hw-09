@@ -14,47 +14,40 @@ const refs = {
 
 refs.dataStart.disabled = true;
 let timerId = null;
-/* let diff = null; */
+
 const options = {
-  enableTime: true,
-  time_24hr: true,
-  defaultDate: new Date(),
-  minuteIncrement: 1,
-  onClose(selectedDates) {
-      console.log(selectedDates[0]);
-      if (selectedDates[0] - options.defaultDate < 0) {
-        Notify.warning("Please choose a date in the future");
-      } else {
-            refs.dataStart.disabled = false; 
-            refs.dataStart.addEventListener('click', onStart);
+    enableTime: true,
+    time_24hr: true,
+    defaultDate: new Date(),
+    minuteIncrement: 1,
+  
+    onClose(selectedDates) {
+        console.log(selectedDates[0]);
+        if (selectedDates[0] - options.defaultDate < 0) {
+            refs.dataStart.disabled = true;
+            Notify.warning("Please choose a date in the future");
+        } else {
+            refs.dataStart.disabled = false;
+        };
+    }
+}
 
-            function onStart() {
-                timerId = setInterval(countTime, 1000);
-            }
+refs.dataStart.addEventListener('click', onStart);
 
-            function countTime() {
-                let diff = selectedDates[0] - options.defaultDate;
-                if (diff < 1000) {
-                    clearInterval(timerId);
-                }
-                
-                const convertDiff = () => convertMs(diff);
-                
-                refs.dataDay.textContent = convertMs.days;
-                refs.dataHours.textContent = convertMs.hours;
-                refs.dataMinutes.textContent = convertMs.minutes;
-                refs.dataSeconds.textContent = convertMs.seconds;
-                
-                if (refs.value.textContent.length < 2) {
-                    addLeadingZero(refs.value);
-                }
-                
-            }
-        }
-    },
-};
-          
-flatpickr(refs.dataInput, options);
+function onStart() {
+    timerId = setInterval(countTime, 1000);
+}
+
+function countTime() {
+    let diff = selectedDates[0] - options.defaultDate;
+    refs.dataStart.disabled = true;
+
+    if (diff < 0) {
+        clearInterval(timerId);
+        return;
+    }
+    updateTimer(convertMs(diff));
+}
 
 function convertMs(ms) {
   const second = 1000;
@@ -70,14 +63,26 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 
-
-function addLeadingZero() {
-    refs.value.textContent = refs.value.textContent.toString().padStart(2, '0');
-    /* if (refs.value.textContent.length < 2) {
-    refs.value.textContent.toString().padStart(2, '0')
-    }  */
-
-    /* if (Number(refs.value.textContent) < 10) {
-    refs.value.textContent.toString().padStart(2, '0')
-    } */
+function addLeadingZero(value) {
+    return String().padStart(2, '0');
 }
+                
+function updateTimer({ days, hours, minutes, seconds }) {
+    refs.dataDay.textContent = addLeadingZero(days);
+    refs.dataHours.textContent = addLeadingZero(hours);
+    refs.dataMinutes.textContent = addLeadingZero(minutes);
+    refs.dataSeconds.textContent = addLeadingZero(seconds);
+}   
+                
+flatpickr(refs.dataInput, options);               
+
+        
+    
+
+          
+
+
+
+
+
+
